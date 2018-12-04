@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="flex-container">
+        <div class="calculator">
+            <div id="screen">
+                    <div id="displayedVal">0</div>
+            </div>
+                        <div id="button-set">
+                            <button id="allClear">AC</button>
+                        <div>
+                                <button class="numberCalc" id="seven">7</button>
+                                <button class="numberCalc" id="eight">8</button>
+                                <button class="numberCalc" id="nine">9</button>
+                                <button class="operatorCalc" id="divide">÷</button>
+                            </div>
+                            <div>
+                                <button class="numberCalc" id="four">4</button>
+                                <button class="numberCalc" id="five">5</button>
+                                <button class="numberCalc" id="six">6</button>
+                                <button class="operatorCalc" id="multiply">×</button>
+                            </div>
+                            <div>
+                                <button class="numberCalc" id="one">1</button>
+                                <button class="numberCalc" id="two">2</button>
+                                <button class="numberCalc" id="three">3</button>
+                                <button class="operatorCalc" id="minus">-</button>
+                            </div>
+                            <div>
+                                <button class="numberCalc" id="zero">0</button>
+                                <button class="operatorCalc" id="point">.</button>
+                                <button class="operatorCalc" id="plus">+</button>
+                                <button class="operatorCalc" id="equals">=</button>
+                            </div>
+                        </div>
+        </div>
+    </div>
+
+    <style>
+
+            body {
+                -webkit-touch-callout: none; /* iOS Safari */
+                -webkit-user-select: none; /* Safari */
+                -khtml-user-select: none; /* Konqueror HTML */
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                supported by Chrome and Opera */
+                background: linear-gradient(to left, rgb(27, 219, 20), rgb(146, 197, 145));
+                font-family: "Digital-7 Mono";
+                font-weight: bold; 
+            }
+
+            .flex-container {
+                display: flex;
+                height: 610px;
+                justify-content: center;
+                align-items: center;
+                margin-top: 40px;
+            } 
+    
+            .calculator {
+                background: linear-gradient(to top, rgb(34, 34, 33), rgb(88, 117, 88)); 
+                padding: 30px;
+                border-radius: 20px;
+                box-shadow: rgb(34, 32, 32) 0 0 1px 6px inset;
+                height: 425px;
+                width: 350px;
+            }
+            
+            #screen {
+                background-color: #ffffff;
+                height: 70px;
+                border-radius: 5px;
+                margin-top: -12px;
+                box-shadow: rgb(27, 26, 26) 0 0 4px 2px;
+            }
+
+            #displayedVal {
+                font-size: 50px;
+                text-align: right;
+                margin-right: 5px;
+            }
+
+            #button-set {
+                margin-top: 16px;
+                margin-bottom: -20px;
+                margin-left: 20px;
+                text-align: left;
+            }
+    
+            button {
+                margin: 10px 5px;
+                width: 43px;
+                height: 43px;
+                border-radius: 20px;
+                box-shadow: rgb(32, 30, 30) 0 0 4px 1px;
+                font-family: 'Orbitron', sans-serif;
+                font-weight: bold; 
+            }
+    
+        </style>
+
+    <script>
+    
+        // grabbing the digit on the screen
+        var displayedVal = document.getElementById("displayedVal");
+
+        // grabbing the calculator buttons
+        var allClear = document.getElementById("allClear");
+        var seven = document.getElementById("seven");
+        var eight = document.getElementById("eight");
+        var nine = document.getElementById("nine");
+        var divide = document.getElementById("divide");
+        var four = document.getElementById("four");
+        var five = document.getElementById("five");
+        var six = document.getElementById("six");
+        var multiply = document.getElementById("multiply");
+        var one = document.getElementById("one");
+        var two = document.getElementById("two");
+        var three = document.getElementById("three");
+        var minus = document.getElementById("minus");
+        var zero = document.getElementById("zero");
+        var point = document.getElementById("point");
+        var plus = document.getElementById("plus");
+        var equals = document.getElementById("equals");
+
+        var defaultVal = "0";
+        var pendingVal;
+        evalStringArray = []; 
+        
+        // separating the number buttons from the operator buttons
+        var numberCalc = document.getElementsByClassName("numberCalc");
+        var operatorCalc = document.getElementsByClassName("operatorCalc");
+        
+        // display and process the numbers
+        var updateDisplayValue = (clickObj) => {
+            var valOutput = clickObj.target.innerText;
+
+            if (defaultVal === "0")
+                defaultVal = "";
+
+                // currentVal = "" + whichever number is pressed (string format)
+                defaultVal += valOutput;
+
+                insertCommas();
+
+                noMoreNumbers();
+
+                // what displays on the screen
+                displayedVal.innerText = defaultVal;
+        }
+        
+        // manipulate numbers with operators
+        var activateOperator = (clickObj) => {
+            var operator = clickObj.target.innerText;
+            
+            switch(operator) {
+                case divide:
+                    pendingVal = defaultVal; 
+                    defaultVal = "0";
+                    displayedVal.innerText = defaultVal;
+                    evalStringArray.push(pendingVal);
+                    evalStringArray.push("/");
+                    break;
+
+                case multiply:
+                    pendingVal = defaultVal; 
+                    defaultVal = "0";
+                    displayedVal.innerText = defaultVal;
+                    evalStringArray.push(pendingVal);
+                    evalStringArray.push("*");
+                    break;
+
+                case minus:
+                    pendingVal = defaultVal; 
+                    defaultVal = "0";
+                    displayedVal.innerText = defaultVal;
+                    evalStringArray.push(pendingVal);
+                    evalStringArray.push("-");
+                    break;
+
+                case plus:
+                    pendingVal = defaultVal; 
+                    defaultVal = "0";
+                    displayedVal.innerText = defaultVal;
+                    evalStringArray.push(pendingVal);
+                    evalStringArray.push("+");
+                    break;
+
+                case equals:
+                    evalStringArray.push(displayedVal);
+                    var evaluation = eval(evalStringArray.join(" "));
+                    defaultVal = evaluation + " "; 
+                    displayedVal.innerText = defaultVal;
+                    evalStringArray = [];
+                    break;
+                    
+                default:  
+                    displayedVal.innerText = "ERROR!";
+            }
+        }
+
+        // doesn't allow any more numbers on the screen after a certain point
+        function noMoreNumbers() {
+            if (defaultVal.length > "12")
+                defaultVal = "0"; 
+        }
+
+        // adds commas to make the numbers more readable
+        function insertCommas() {
+            if (defaultVal.length >= 4 && defaultVal.length < 5) 
+                defaultVal += ","; 
+            else if (defaultVal.length >= 8 && defaultVal.length < 9)
+                defaultVal += ","; 
+        }
+
+        // iterating through each number
+        for (let i = 0; i < numberCalc.length; i++) {
+            numberCalc[i].addEventListener("click", updateDisplayValue);
+        }
+
+        // iterating through each operator
+        for (let i = 0; i < operatorCalc.length; i++) {
+            operatorCalc[i].addEventListener("click", activateOperator);
+        }
+        
+        // extra button functionality
+
+        // activate and display decimal
+        point.onclick = () => {
+            if (!defaultVal.includes("."))
+                defaultVal += ".";
+                displayedVal.innerText = defaultVal;
+        }
+
+        // clear everything on the screen
+        allClear.onclick = () => {
+            defaultVal = "";
+            displayedVal.innerText = "0"; 
+        }
+        
+    </script>
+    
+</body>
+</html>
