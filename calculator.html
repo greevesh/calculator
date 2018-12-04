@@ -151,8 +151,6 @@
                 // currentVal = "" + whichever number is pressed (string format)
                 defaultVal += valOutput;
 
-                insertCommas();
-
                 noMoreNumbers();
 
                 // what displays on the screen
@@ -163,7 +161,7 @@
         var activateOperator = (clickObj) => {
             var operator = clickObj.target.innerText;
             
-            switch(operator) {
+            switch (operator) {
                 case divide:
                     pendingVal = defaultVal; 
                     defaultVal = "0";
@@ -197,15 +195,15 @@
                     break;
 
                 case equals:
-                    evalStringArray.push(displayedVal);
+                    evalStringArray.push(defaultVal);
                     var evaluation = eval(evalStringArray.join(" "));
-                    defaultVal = evaluation + " "; 
+                    // e.g. "5" + "6" + "*" = "30"
+                    defaultVal = evaluation + " ";  
                     displayedVal.innerText = defaultVal;
                     evalStringArray = [];
                     break;
                     
                 default:  
-                    displayedVal.innerText = "ERROR!";
             }
         }
 
@@ -215,14 +213,6 @@
                 defaultVal = "0"; 
         }
 
-        // adds commas to make the numbers more readable
-        function insertCommas() {
-            if (defaultVal.length >= 4 && defaultVal.length < 5) 
-                defaultVal += ","; 
-            else if (defaultVal.length >= 8 && defaultVal.length < 9)
-                defaultVal += ","; 
-        }
-
         // iterating through each number
         for (let i = 0; i < numberCalc.length; i++) {
             numberCalc[i].addEventListener("click", updateDisplayValue);
@@ -230,7 +220,7 @@
 
         // iterating through each operator
         for (let i = 0; i < operatorCalc.length; i++) {
-            operatorCalc[i].addEventListener("click", activateOperator);
+            operatorCalc[i].addEventListener("click", activateOperator, false);
         }
         
         // extra button functionality
